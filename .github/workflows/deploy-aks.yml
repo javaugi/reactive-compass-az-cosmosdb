@@ -1,9 +1,9 @@
 name: Deploy to AKS
 
 on:
-  push:
-    branches: [ "main" ]
-
+  # push:
+  #   branches: [ "main" ]
+  workflow_dispatch:
 env:
   ACR_NAME: pharmaacr.azurecr.io  # Replace with your ACR name
   AKS_CLUSTER: PharmaAKS

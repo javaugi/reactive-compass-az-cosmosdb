@@ -92,7 +92,7 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<User> getAllUsers() {
         log.info("getAllUsers");
-        return userService.getAllUsers();
+        return userService.getAllUsers().limitRate(20);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -67,7 +67,7 @@ public class UserService {
     }
 
     public Flux<User> getAllUsers() {
-        return userRepository.getAllUsers().limitRate(20);
+        return userRepository.getAllUsers();
     }
 
     public Mono<User> getUserById(String id) {
