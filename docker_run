@@ -1,0 +1,10 @@
+#!/bin/sh
+echo "Running: mvn clean package"
+mvn --version
+mvn clean package
+reset
+#echo "Starting docker with azure cosmos db emulator"
+#ducker_start_azcdb_emulator
+echo "Running docker-compose up --build"
+docker-compose up --build
+

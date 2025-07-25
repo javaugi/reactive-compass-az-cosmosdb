@@ -1,0 +1,23 @@
+#5.1. k8s/deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pharmacy-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pharmacy-service
+  template:
+    metadata:
+      labels:
+        app: pharmacy-service
+    spec:
+      containers:
+      - name: pharmacy-service
+        image: pharmaacr.azurecr.io/pharmacy-service:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - secretRef:
+            name: cosmos-secret

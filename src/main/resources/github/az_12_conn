@@ -1,0 +1,6 @@
+# Get AKS credentials
+az aks get-credentials --resource-group PharmaRG --name PharmaAKS
+
+# Get Cosmos DB connection string and Save the Cosmos DB connection string for later.
+az cosmosdb keys list --name PharmaCosmosDB --resource-group PharmaRG --type connection-strings
+

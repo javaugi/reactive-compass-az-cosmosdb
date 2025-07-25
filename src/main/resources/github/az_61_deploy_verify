@@ -1,0 +1,15 @@
+Step 6: Deploy & Verify
+Push to GitHub → Triggers CI/CD.
+
+Check Deployment Status:
+
+kubectl get pods -w  # Watch pods
+kubectl get service  # Get external IP
+
+Test API:
+
+curl -X POST http://<EXTERNAL-IP>/prescriptions -H "Content-Type: application/json" -d '{"patientId":"123","drugName":"Aspirin"}'
+Final Notes
+✅ Auto-Scaling: Configure HorizontalPodAutoscaler in AKS.
+✅ Monitoring: Use Azure Monitor + Prometheus.
+✅ Security: Enable Azure Key Vault for secrets.

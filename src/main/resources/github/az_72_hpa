@@ -1,0 +1,8 @@
+#1.2 Add HPA Configuration
+#k8s/hpa.yml
+
+#1.3 Update GitHub Actions Workflow
+#Add this step to deploy-aks.yml after kubectl apply -f k8s/:
+
+- name: Apply HPA
+  run: kubectl apply -f k8s/hpa.yml

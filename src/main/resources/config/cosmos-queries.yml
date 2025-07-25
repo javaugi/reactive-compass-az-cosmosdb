@@ -1,0 +1,34 @@
+cosmos:
+  queries:
+    premiumByPlanTypeTierAnalysis: >-
+      SELECT p.planType,
+      p.tierLevel,
+      AVG(pp.basePremium * g.adjustmentFactor) AS avgAdjustedPremium,
+      MIN(pp.basePremium * g.adjustmentFactor) AS minPremium,
+      MAX(pp.basePremium * g.adjustmentFactor) AS maxPremium,
+      COUNT(1) AS planCount
+      FROM p
+      JOIN pp IN p.planPricings
+      JOIN g IN p.geographicPricings
+      WHERE pp.ageBracket = '40-49'
+      AND g.ratingArea = 12
+      AND p.active = true
+      GROUP BY p.planType, p.tierLevel
+    costVsCoverageAnalysis: >-
+      SELECT p.id,
+      p.planName,
+      p.coverageDetails[0].deductibleIndividual,
+      p.coverageDetails[0].oopMaxIndividual,
+      p.planPricings[0].basePremium,
+      (p.planPricings[0].basePremium * 12 + p.coverageDetails[0].deductibleIndividual) AS estimatedAnnualCost,
+      AVG(cl.allowedAmount) AS avgClaimCost,
+      COUNT(cl.id) AS claimCount
+      FROM p
+      JOIN cl IN p.claimsData
+      WHERE p.planPricings[0].ageBracket = '30-39'
+      AND p.tierLevel = 'Silver'
+      GROUP BY 
+      p.id, p.planName, 
+      p.coverageDetails[0].deductibleIndividual, 
+      p.coverageDetails[0].oopMaxIndividual, 
+      p.planPricings[0].basePremium

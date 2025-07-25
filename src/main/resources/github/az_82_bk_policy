@@ -1,0 +1,15 @@
+#2.2 Create Backup Policy (Azure CLI)
+
+# Create a backup policy JSON file
+echo '{
+  "continuousModeProperties": {
+    "tier": "Continuous30Days"
+  }
+}' > backup-policy.json
+
+# Apply the policy
+az cosmosdb sql backup-policy update \
+  --resource-group PharmaRG \
+  --account-name PharmaCosmosDB \
+  --name PrescriptionDB \
+  --policy @backup-policy.json

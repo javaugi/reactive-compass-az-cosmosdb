@@ -1,0 +1,43 @@
+#4.2. Create GitHub Workflow
+#.github/workflows/deploy-aks.yml
+name: Deploy to AKS
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  ACR_NAME: pharmaacr.azurecr.io  # Replace with your ACR name
+  AKS_CLUSTER: PharmaAKS
+  APP_NAME: pharmacy-service
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build with Maven
+      - name: Build with Maven
+        run: mvn package -DskipTests
+
+      # Login to Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Build & Push Docker Image
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t $ACR_NAME/$APP_NAME:${{ github.sha }} .
+          docker push $ACR_NAME/$APP_NAME:${{ github.sha }}
+
+      # Deploy to AKS
+      - name: Deploy to AKS
+        run: |
+          az aks get-credentials --resource-group PharmaRG --name $AKS_CLUSTER
+          kubectl create secret generic cosmos-secret \
+            --from-literal=COSMOS_URI=${{ secrets.COSMOS_URI }} \
+            --from-literal=COSMOS_KEY=${{ secrets.COSMOS_KEY }}
+          kubectl apply -f k8s/

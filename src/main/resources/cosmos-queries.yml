@@ -1,0 +1,93 @@
+cosmos:
+  queries:
+    premiumByPlanTypeTierAnalysis: >-
+      SELECT p.planType,
+      p.tierLevel,
+      AVG(pp.basePremium * g.adjustmentFactor) AS avgAdjustedPremium,
+      MIN(pp.basePremium * g.adjustmentFactor) AS minPremium,
+      MAX(pp.basePremium * g.adjustmentFactor) AS maxPremium,
+      COUNT(1) AS planCount
+      FROM insurancePlans p
+      JOIN pp IN p.planPricings
+      JOIN g IN p.geographicPricings
+      WHERE pp.ageBracket = '40-49'
+      AND g.ratingArea = 12
+      AND p.active = true
+      GROUP BY p.planType, p.tierLevel
+    costVsCoverageAnalysis: >-
+      SELECT p.id,
+      p.planName,
+      p.coverageDetails[0].deductibleIndividual,
+      p.coverageDetails[0].oopMaxIndividual,
+      p.planPricings[0].basePremium,
+      (p.planPricings[0].basePremium * 12 + p.coverageDetails[0].deductibleIndividual) AS estimatedAnnualCost,
+      AVG(cl.allowedAmount) AS avgClaimCost,
+      COUNT(cl.id) AS claimCount
+      FROM insurancePlans p
+      JOIN cl IN p.claimsData
+      WHERE p.planPricings[0].ageBracket = '30-39'
+      AND p.tierLevel = 'Silver'
+      GROUP BY p.id, p.planName, p.coverageDetails[0].deductibleIndividual, p.coverageDetails[0].oopMaxIndividual, p.planPricings[0].basePremium
+    tobaccoSurchargeImpactAnalysis: >-
+      SELECT p.id,
+      p.planName,
+      ic.companyName,
+      pp.ageBracket,
+      pp.basePremium AS nonTobaccoPremium,
+      (pp.basePremium + pp.tobaccoSurcharge) AS tobaccoPremium,
+      ROUND((pp.tobaccoSurcharge / pp.basePremium) * 100, 2) AS surchargePercentage,
+      SUM(m.tobaccoUser = true ? 1 : 0) AS tobaccoUsers,
+      SUM(m.tobaccoUser = false ? 1 : 0) AS nonTobaccoUsers
+      FROM insurancePlans p
+      JOIN pp IN p.planPricings
+      JOIN ic IN p.insuranceCompanies
+      JOIN m IN p.members
+      WHERE pp.basePremium > 0 
+      GROUP BY p.id, p.planName, ic.companyName, pp.ageBracket, pp.basePremium, pp.tobaccoSurcharge
+    marketBenchmarkingAnalysis: >-
+      SELECT ic.companyName,
+      p.tierLevel,
+      p.planType,
+      ic.marketShare,
+      AVG(pp.basePremium) AS avgBasePremium,
+      AVG(pp.basePremium * g.adjustmentFactor) AS avgAdjustedPremium
+      FROM insurancePlans p
+      JOIN ic IN p.insuranceCompanies
+      JOIN pp IN p.planPricings
+      JOIN g IN p.geographicPricings
+      WHERE pp.ageBracket = '40-49'
+      AND g.ratingArea = 5
+      AND p.active = true
+      GROUP BY ic.companyName, p.tierLevel, p.planType, ic.marketShare
+    premiumVsAgeAnalysis: >-
+      SELECT pp.ageBracket,
+      pp.ageSortOrder,
+      AVG(pp.basePremium) AS avgPremium
+      FROM planPricings pp
+      WHERE pp.ageBracket IN ('0-20', '21-29', '30-39', '40-49', '50-59', '60+')
+      GROUP BY pp.ageBracket, pp.ageSortOrder
+    riskPoolAnalysis: >-
+      SELECT p.id, p.planName,
+      COUNT(m.id) AS enrolledMembers,
+      SUM(pp.basePremium * 12) AS annualPremiumVolume,
+      SUM(cl.allowedAmount) AS annualClaimsCosts
+      FROM insurancePlans p
+      JOIN m IN p.members
+      JOIN pp IN p.planPricings
+      JOIN cl IN p.claimsData
+      WHERE pp.ageBracket = m.ageBracket
+      AND cl.serviceDate >= '2023-01-01' AND cl.serviceDate <= '2023-12-31'
+      AND p.active = true
+      GROUP BY p.id, p.planName
+    networkAdequacyImpactAnalysis: >-
+      SELECT p.id,
+      p.planName,
+      SUM(pr.networkStatus = 'In-Network' ? 1 : 0) AS inNetworkProviders,
+      SUM(pr.networkStatus = 'In-Network' ? (cl.id != null ? 1 : 0) : 0) AS inNetworkClaims,
+      SUM(pr.networkStatus = 'Out-of-Network' ? (cl.id != null ? 1 : 0) : 0) AS outOfNetworkClaims,
+      AVG(pr.networkStatus = 'In-Network' ? cl.allowedAmount : null) AS avgInNetworkCost,
+      AVG(pr.networkStatus = 'Out-of-Network' ? cl.allowedAmount : null) AS avgOutOfNetworkCost
+      FROM insurancePlans p
+      JOIN cl IN p.claimsData
+      JOIN pr IN p.insuranceProviders
+      GROUP BY p.id, p.planName      

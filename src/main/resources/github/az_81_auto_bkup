@@ -1,0 +1,4 @@
+#Part 2: Cosmos DB Automated Backups
+#2.1 Enable Continuous Backup (Point-in-Time Restore)
+
+az cosmosdb update --name PharmaCosmosDB --resource-group PharmaRG --enable-continuous-backup true

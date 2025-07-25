@@ -1,0 +1,18 @@
+Final Architecture
+
+[GitHub Actions] → [ACR] → [AKS (Auto-Scaled Pods)]  
+                     │  
+                     └── [Cosmos DB (Continuous Backup)]  
+
+Key Commands to Verify
+# Check HPA status
+kubectl get hpa
+
+# Check backup policy
+az cosmosdb sql backup-policy show --account-name PharmaCosmosDB --resource-group PharmaRG
+
+Summary of Changes
+    Component           What We Added
+    AKS Auto-Scaling	HPA to scale pods based on CPU usage (2→10)
+    Cosmos DB Backups	Continuous 30-day backups + restore CLI
+    CI/CD Pipeline      Added HPA deploy + backup verification

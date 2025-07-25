@@ -1,0 +1,11 @@
+#2.3 Restore from Backup (Example Command)
+
+az cosmosdb sql restorable-database list \
+  --account-name PharmaCosmosDB \
+  --location eastus
+
+az cosmosdb sql database restore \
+  --account-name PharmaCosmosDB \
+  --name PrescriptionDB \
+  --resource-group PharmaRG \
+  --restore-timestamp 2024-05-20T00:00:00Z

@@ -1,0 +1,10 @@
+#Part 3: Update CI/CD Pipeline for Backup Checks
+#Add a post-deployment step in deploy-aks.yml to verify backups:
+
+- name: Verify Cosmos DB Backup
+  run: |
+    echo "Checking backup status..."
+    az cosmosdb sql backup-policy show \
+      --account-name PharmaCosmosDB \
+      --resource-group PharmaRG \
+      --name PrescriptionDB

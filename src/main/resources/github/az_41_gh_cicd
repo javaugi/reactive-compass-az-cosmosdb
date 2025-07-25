@@ -1,0 +1,11 @@
+#Step 4: Set Up GitHub Actions CI/CD
+#4.1. Store Secrets in GitHub
+#
+#Go to: Repo → Settings → Secrets → Actions
+#Add these secrets:
+#
+az ad sp create-for-rbac --name PharmaGitHubAction --role contributor
+
+#AZURE_CREDENTIALS (from az ad sp create-for-rbac --name PharmaGitHubAction --role contributor)
+COSMOS_URI (from az cosmosdb keys list)
+COSMOS_KEY (from az cosmosdb keys list)

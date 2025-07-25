@@ -1,0 +1,21 @@
+Step 1: Set Up Azure Resources (ACR - Azure Container Registry)
+# Login to Azure
+az login
+
+# Create a Resource Group
+az group create --name PharmaRG --location eastus
+
+# Create AKS Cluster (adjust node count as needed)
+az aks create --resource-group PharmaRG --name PharmaAKS --node-count 2 --enable-addons monitoring --generate-ssh-keys
+
+# Create Azure Container Registry (ACR)
+az acr create --resource-group PharmaRG --name PharmaACR --sku Basic
+
+# Attach ACR to AKS
+az aks update --resource-group PharmaRG --name PharmaAKS --attach-acr PharmaACR
+
+# Create Cosmos DB (SQL API)
+az cosmosdb create --name PharmaCosmosDB --resource-group PharmaRG --kind GlobalDocumentDB --locations regionName=eastus
+#az cosmosdb sql database create --account-name PharmaCosmosDB --name PrescriptionDB --resource-group PharmaRG
+#az cosmosdb sql container create --account-name PharmaCosmosDB --database-name PrescriptionDB --name Prescriptions --partition-key-path "/patientId" --resource-group PharmaRG
+

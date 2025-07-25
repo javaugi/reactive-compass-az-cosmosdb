@@ -1,0 +1,13 @@
+#5.2. k8s/service.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: pharmacy-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: pharmacy-service
