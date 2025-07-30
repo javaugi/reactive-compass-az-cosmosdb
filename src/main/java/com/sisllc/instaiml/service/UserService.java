@@ -34,7 +34,9 @@ public class UserService {
                 userDto.firstName(),
                 userDto.lastName(),
                 userDto.age(),
-                userDto.city()
+                userDto.city(),
+                userDto.createdDate(),
+                userDto.updatedDate()
         );
         return userRepository.saveUser(newUser);
     }
@@ -54,7 +56,9 @@ public class UserService {
                             userDto.firstName(),
                             userDto.lastName(),
                             userDto.age(),
-                            userDto.city()
+                            userDto.city(),
+                            userDto.createdDate(),
+                            userDto.updatedDate()
                     );
                     return userRepository.save(updatedUser);
                 });

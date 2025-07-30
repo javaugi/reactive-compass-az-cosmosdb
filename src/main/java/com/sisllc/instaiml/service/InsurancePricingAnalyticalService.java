@@ -13,6 +13,7 @@ import com.sisllc.instaiml.repository.PlanPricingCustomRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,25 +25,25 @@ public class InsurancePricingAnalyticalService {
     
     public void performAnalytics() {
         log.info("performAnalytics entered ... ");
-        premiumVsAgeAnalysis();
+        doPremiumVsAgeAnalysis();
         log.info("premiumVsAgeAnalysis Done ");
-        premiumByPlanTypeTierAnalysis();
+        doPremiumByPlanTypeTierAnalysis();
         log.info("premiumByPlanTypeTierAnalysis Done.");
-        costVsCoverageAnalysis();
+        doCostVsCoverageAnalysis();
         log.info("costVsCoverageAnalysis Done.");
-        tobaccoSurchargeImpactAnalysis();
+        doTobaccoSurchargeImpactAnalysis();
         log.info("tobaccoSurchargeImpactAnalysis Done.");
-        marketBenchmarkingAnalysis();
+        doMarketBenchmarkingAnalysis();
         log.info("marketBenchmarkingAnalysis Done.");
-        riskPoolAnalysis();
+        doRiskPoolAnalysis();
         log.info("riskPoolAnalysis Done");
-        networkAdequacyImpactAnalysis();
+        doNetworkAdequacyImpactAnalysis();
         log.info("All Done performAnalytics after networkAdequacyImpactAnalysis");
     }
     
-    private void premiumVsAgeAnalysis() {
+   private void doPremiumVsAgeAnalysis() {
         try{
-            planPricingRepository.premiumVsAgeAnalysis()
+            premiumVsAgeAnalysis()
                 .doOnNext(dto -> log.info("premiumVsAgeAnalysis {}", dto))
                 .switchIfEmpty(dto -> log.info("premiumVsAgeAnalysis: No Data Found"))
                 .subscribe();
@@ -51,34 +52,45 @@ public class InsurancePricingAnalyticalService {
         }
     }    
     
-    private void premiumByPlanTypeTierAnalysis() {
+    public Flux<InsurancePricingDto> premiumVsAgeAnalysis() {
+        return planPricingRepository.premiumVsAgeAnalysis();
+    }
+    
+   private void doPremiumByPlanTypeTierAnalysis() {
         try{
-            SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_PREM_BY_PLAN_TIER));
-            cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class)
+            premiumByPlanTypeTierAnalysis()
                 .doOnNext(dto -> log.info("premiumByPlanTypeTierAnalysis {}", dto))
                 .switchIfEmpty(dto -> log.info("premiumByPlanTypeTierAnalysis: No Data Found"))
-                .subscribe();            
+                .subscribe();
         }catch(Exception ex) {
             log.error(" Error premiumByPlanTypeTierAnalysis", ex);
         }
     }
      
-    private void costVsCoverageAnalysis() {
+    public Flux<InsurancePricingDto> premiumByPlanTypeTierAnalysis() {
+        SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_PREM_BY_PLAN_TIER));
+        return cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class);
+    }    
+        
+    private void doCostVsCoverageAnalysis() {
         try{
-            SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_COST_COVERAGE));
-            cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class)
+            costVsCoverageAnalysis()
                 .doOnNext(dto -> log.info("costVsCoverageAnalysis {}", dto))
                 .switchIfEmpty(dto -> log.info("costVsCoverageAnalysis: No Data Found"))
-                .subscribe();            
+                .subscribe();
         }catch(Exception ex) {
             log.error(" Error costVsCoverageAnalysis", ex);
         }
     }
      
-    private void tobaccoSurchargeImpactAnalysis() {
+    public Flux<InsurancePricingDto> costVsCoverageAnalysis() {
+        SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_COST_COVERAGE));
+        return cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class);
+    }    
+        
+    private void doTobaccoSurchargeImpactAnalysis() {
         try{
-            SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_TOBACCO_SURCHARGE));
-            cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class)
+            tobaccoSurchargeImpactAnalysis()
                 .doOnNext(dto -> log.info("tobaccoSurchargeImpactAnalysis {}", dto))
                 .switchIfEmpty(dto -> log.info("tobaccoSurchargeImpactAnalysis: No Data Found"))
                 .subscribe();            
@@ -87,10 +99,14 @@ public class InsurancePricingAnalyticalService {
         }
     }    
          
-    private void marketBenchmarkingAnalysis() {
+    public Flux<InsurancePricingDto> tobaccoSurchargeImpactAnalysis() {
+        SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_TOBACCO_SURCHARGE));
+        return cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class);
+    }    
+
+    private void doMarketBenchmarkingAnalysis() {
         try{
-            SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_MARKET_BENCHMARKING));
-            cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class)
+            marketBenchmarkingAnalysis()
                 .doOnNext(dto -> log.info("marketBenchmarkingAnalysis {}", dto))
                 .switchIfEmpty(dto -> log.info("marketBenchmarkingAnalysis: No Data Found"))
                 .subscribe();            
@@ -99,10 +115,14 @@ public class InsurancePricingAnalyticalService {
         }
     }        
          
-    private void riskPoolAnalysis() {
+    public Flux<InsurancePricingDto> marketBenchmarkingAnalysis() {
+        SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_MARKET_BENCHMARKING));
+        return cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class);
+    }    
+
+    private void doRiskPoolAnalysis() {
         try{
-            SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_RISK_POOL));
-            cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class)
+           riskPoolAnalysis()               
                 .doOnNext(dto -> log.info("riskPoolAnalysis {}", dto))
                 .switchIfEmpty(dto -> log.info("riskPoolAnalysis: No Data Found"))
                 .subscribe();            
@@ -111,10 +131,14 @@ public class InsurancePricingAnalyticalService {
         }
     }       
         
-    private void networkAdequacyImpactAnalysis() {
+    public Flux<InsurancePricingDto> riskPoolAnalysis() {
+        SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_RISK_POOL));
+        return cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class);
+    }    
+
+    private void doNetworkAdequacyImpactAnalysis() {
         try{
-            SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_NETWORK_ADEQUACY));
-            cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class)
+            networkAdequacyImpactAnalysis()
                 .doOnNext(dto -> log.info("networkAdequacyImpactAnalysis {}", dto))
                 .switchIfEmpty(dto -> log.info("networkAdequacyImpactAnalysis: No Data Found"))
                 .subscribe();            
@@ -122,6 +146,11 @@ public class InsurancePricingAnalyticalService {
             log.error(" Error networkAdequacyImpactAnalysis", ex);
         }
     }       
+
+    public Flux<InsurancePricingDto> networkAdequacyImpactAnalysis() {
+        SqlQuerySpec querySpec = new SqlQuerySpec(queryConfig.getQuery(CosmosQueryConfig.KEY_NETWORK_ADEQUACY));
+        return cosmosTemplate.runQuery(querySpec, InsurancePlan.class, InsurancePricingDto.class);
+    }    
 }
 
 /*

@@ -4,8 +4,11 @@
  */
 package com.sisllc.instaiml.data;
 
+import static com.sisllc.instaiml.data.DataGeneratorBase.JAVA_FAKER;
 import com.sisllc.instaiml.model.User;
+import java.time.ZoneOffset;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -26,6 +29,8 @@ public class UserGenerator extends DataGeneratorBase {
             .phone(JAVA_FAKER.phoneNumber().phoneNumber())
             .firstName(firstName)
             .lastName(lastName)
+            .createdDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(30, 90), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
+            .updatedDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(1, 30), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))            
             .build();
     }
 }

@@ -10,10 +10,10 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface UserRepository extends ReactiveCosmosRepository<User, String>, CustomUserRepository {
     // Return a Flux of string IDs
-    @Query("SELECT VALUE c.id FROM c")
+    @Query("SELECT VALUE id FROM users")
     Flux<String> getUserIds();
 
-    @Query("SELECT * FROM c")
+    @Query("SELECT * FROM users")
     Flux<User> getAllUsers();
 
     Mono<User> findByUsername(String username);

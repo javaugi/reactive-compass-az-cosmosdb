@@ -5,7 +5,9 @@
 package com.sisllc.instaiml.data;
 
 import com.sisllc.instaiml.model.DrugInventory;
+import java.time.ZoneOffset;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class DrugInventoryGenerator extends DataGeneratorBase {
 
@@ -16,8 +18,8 @@ public class DrugInventoryGenerator extends DataGeneratorBase {
             .medicationId(medicationId)
             .quantity(JAVA_FAKER.number().numberBetween(15, 100))
             .reorderThreshold(JAVA_FAKER.number().numberBetween(10, 20))
-            //.createdDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(30, 90), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
-            //.updatedDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(1, 30), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
+            .createdDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(30, 90), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
+            .updatedDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(1, 30), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
             .build();
     }    
 }

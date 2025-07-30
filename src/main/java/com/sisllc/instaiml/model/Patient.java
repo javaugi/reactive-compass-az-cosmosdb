@@ -7,7 +7,6 @@ package com.sisllc.instaiml.model;
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.CosmosIndexingPolicy;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -39,7 +38,7 @@ public class Patient {
     @PartitionKey       // Critical annotation!
     private String name;
 
-    private Instant birthDate;
+    private OffsetDateTime birthDate;
     
     private String email;
     private String phone;

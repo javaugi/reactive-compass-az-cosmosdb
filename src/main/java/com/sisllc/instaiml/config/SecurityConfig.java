@@ -50,11 +50,21 @@ public class SecurityConfig {
         return http
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(exchanges -> exchanges
-                .pathMatchers("/", "/index.html", "/static/**", "/manifest.json", "/favicon.ico",
-                             "/logo192.png", "/asset-manifest.json", "/service-worker.js").permitAll() // Explicitly permit these static assets
+                .pathMatchers("/api/auth/**", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                    "/index.html", "/static/**", "/manifest.json", "/favicon.ico",
+                    "/logo192.png", "/asset-manifest.json", "/service-worker.js").permitAll() // Explicitly permit these static assets
                 //.anyExchange().authenticated() // All other requests require authentication
                 .anyExchange().permitAll()
             )
+            // You may also need to configure headers if the console is running on the same port,
+            // but with a separate port, this is often not necessary.
+            // .headers(headers -> headers
+            //     .frameOptions(ServerHttpSecurity.HeaderSpec.FrameOptionsSpec::disable)
+            // )
+            // the following two are commented out for now to test
+            //.formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+            //.httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)      
+            //            
             // Add your JwtAuthFilter here, but ensure it's *after* the static resources are handled
             // For now, let's ensure the static resources are served first.
             // If JwtAuthFilter is a @Component, its order might need to be adjusted.

@@ -1,5 +1,7 @@
 package com.sisllc.instaiml.dto;
 
+import java.time.OffsetDateTime;
+
 public record UserDto(
         String id,
         String name,
@@ -16,6 +18,10 @@ public record UserDto(
 
         int age,
 
-        String city
+        String city,
+        
+        OffsetDateTime createdDate, 
+       
+        OffsetDateTime updatedDate        
 ) {}
 

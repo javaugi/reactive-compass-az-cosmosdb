@@ -24,8 +24,8 @@ public class PrescriptionGenerator extends DataGeneratorBase {
             .status(JAVA_FAKER.options().option("active", "expired", "filled", "cancelled"))
             .fillDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(2, 20), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
             .prescriptionDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(30, 90), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))            
-            //.createdDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(30, 90), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
-            //.updatedDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(1, 30), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
+            .createdDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(30, 90), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
+            .updatedDate(JAVA_FAKER.date().past(JAVA_FAKER.number().numberBetween(1, 30), TimeUnit.DAYS).toInstant().atOffset(ZoneOffset.UTC))
             .build();
     }    
     

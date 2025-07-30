@@ -2,9 +2,12 @@ package com.sisllc.instaiml.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+import java.time.OffsetDateTime;
 import org.springframework.data.annotation.Id;
 import java.util.UUID;
 import lombok.Builder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Builder(toBuilder = true)
 @Container(containerName = "users")
@@ -28,7 +31,14 @@ public record User(
 
         int age,
 
-        String city
+        String city,
+        
+        @CreatedDate
+        OffsetDateTime createdDate, 
+
+        @LastModifiedDate
+        OffsetDateTime updatedDate
+
 ) {
     // Compact constructor (Java 17+).
     // Auto-generate ID if it's null or blank.
