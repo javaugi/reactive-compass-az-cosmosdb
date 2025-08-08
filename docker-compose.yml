@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8088:8088"
+      - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - COSMOS_ENDPOINT=https://host.docker.internal:8081/

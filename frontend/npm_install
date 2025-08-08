@@ -5,15 +5,18 @@ npm install -g npm
 #npm uninstall @vaadin/react-components-pro     # uninstall those not used
 #rm -rf node_modules package-lock.json          # clean up
 npm install react-router-dom
+npm install react-dom
 #yarn add react-router-dom
-npm uninstall react-scripts
-npm uninstall eslint
-npm uninstall eslint-config-react-app
+#npm uninstall react-scripts
+#npm uninstall eslint
+#npm uninstall eslint-config-react-app
 npm install axios
 npm install react-cookie
 npm install web-vitals
 npm install bootstrap
 npm install reactstrap
+npm install react-popper
+npm install popperjs/core
 npm install --save-dev @testing-library/react @testing-library/jest-dom
 #npm test -- --verbose                          # run test debug
 #npm test -- --watch                            # run test watch mode

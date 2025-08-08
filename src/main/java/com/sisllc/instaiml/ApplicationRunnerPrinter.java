@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ApplicationRuunerPrinter implements ApplicationRunner {
+public class ApplicationRunnerPrinter implements ApplicationRunner {
 
     @Autowired
     private Environment env;
